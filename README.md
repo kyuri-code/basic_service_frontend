@@ -27,11 +27,12 @@
    ```bash
    git clone https://github.com/kyuri-code/basic_service_frontend.git
    cd basic_service_frontend
+   ```
 
 2. **依存関係のインストール**: Node.jsがインストールされていることを確認してください。その後、以下のコマンドを実行します。
-```bash
-npm install
-```
+    ```bash
+    npm install
+    ```
 
 3. **Webサーバの起動**
 起動方法については、別紙のNginxで起動する方法から参照してください。
