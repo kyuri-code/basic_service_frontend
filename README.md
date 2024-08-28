@@ -1,70 +1,63 @@
-# Getting Started with Create React App
+# React ToDoアプリケーション
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+このアプリケーションは、Reactで構築されたシンプルなToDoアプリです。ユーザーはタスクの作成、更新、削除、管理を行うことができ、各タスクに関連するコメントを追加することもできます。また、タスクの完了状況を追跡することができます。
 
-## Available Scripts
+## 目次
 
-In the project directory, you can run:
+- [機能](#機能)
+- [インストール](#インストール)
+- [APIエンドポイント](#apiエンドポイント)
+- [使用技術](#使用技術)
 
-### `npm start`
+## 機能
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **タスクの作成**: ユーザーはタイトルと説明を入力して新しいタスクを作成できます。
+- **タスクの更新**: 既存のタスクの詳細を更新できます。
+- **タスクの削除**: タスクを削除できます。削除されたタスクはデータベースから削除されます。
+- **タスクの完了**: タスクを完了としてマークし、視覚的に完了状態を表示します。
+- **コメントの追加**: ユーザーはタスクにコメントを追加でき、各コメントにはタイムスタンプが含まれます。
+- **エラーハンドリング**: 操作が失敗した場合、エラーメッセージが表示されます。
+- **レスポンシブデザイン**: UIは、さまざまなデバイスで見やすく、ユーザーフレンドリーに設計されています。
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## インストール
 
-### `npm test`
+このアプリケーションをローカル環境で実行するには、以下の手順に従ってください。
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. **リポジトリのクローン**:
+   ```bash
+   git clone https://github.com/kyuri-code/basic_service_frontend.git
+   cd basic_service_frontend
 
-### `npm run build`
+2. **依存関係のインストール**: Node.jsがインストールされていることを確認してください。その後、以下のコマンドを実行します。
+```bash
+npm install
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. **Webサーバの起動**
+起動方法については、別紙のNginxで起動する方法から参照してください。
+Nginxをインストールして、Gitから取得したフロントエンドアプリをbuildしてNginxのディレクトリにコピーしてください。
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## APIエンドポイント
+このアプリケーションは、以下のAPIエンドポイントと連携しています。
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+GET /api/tasks: すべてのタスクを取得します。
+POST /api/tasks/create: 新しいタスクを作成します。
+POST /api/tasks/update/{id}: 指定したIDのタスクを更新します。
+※現状は使えない
+POST /api/tasks/delete/{id}: 指定したIDのタスクを削除します。
+GET /api/tasks/{id}/comments: 指定したタスクのコメントを取得します。
+POST /api/tasks/{id}/comments/add: タスクに新しいコメントを追加します。
 
-### `npm run eject`
+## 使用技術
+フロントエンド:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+React: ユーザーインターフェースを構築するためのJavaScriptライブラリ。
+Axios: APIリクエストを行うためのPromiseベースのHTTPクライアント。
+CSS: アプリケーションのスタイリングに使用。
+バックエンド（仮定）:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Spring Boot: RESTful APIを構築するためのバックエンドフレームワーク。
+MyBatis: データベースアクセスを管理するための永続化フレームワーク。
+PostgreSQL: タスクやコメントを保存するためのデータベース。
+貢献
+このプロジェクトへの貢献は大歓迎です！問題を発見した場合や改善の提案がある場合は、Issueを作成するか、プルリクエストを送ってください。
