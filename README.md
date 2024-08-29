@@ -15,7 +15,8 @@ Windowsで実施する場合は、WSL2のセットアップを完了するよう
 プロジェクト用の端末を使用している場合は、使用しないようにしてください。
 WSL2のセットアップはOS自体の設定を変更してしまうので、推奨しないです。
 下記リンクが参考になると思います。Windows11ですが、10でも参考になるかと思います。
-[参考](https://note.com/hiro20180901/n/nc798a07485e2)
+
+[WSL2の設定方法](https://note.com/hiro20180901/n/nc798a07485e2)
 
 
 ## 機能
@@ -75,6 +76,7 @@ Ngxinをインストールする
     # nginxの起動確認
     # 「running」が確認できればNginxは起動している
     sudo systemctl status nginx.service
+    # 以下が表示される
     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
         Active: active (running) since Tue 2024-08-27 15:40:56 JST; 50s ago
 ```
@@ -137,20 +139,18 @@ Nginxの設定で適切なリバースプロキシの設定を行う。
 ## APIエンドポイント
 このアプリケーションは、以下のAPIエンドポイントと連携しています。
 
-GET /api/tasks: すべてのタスクを取得します。
-POST /api/tasks/create: 新しいタスクを作成します。
-POST /api/tasks/update/{id}: 指定したIDのタスクを更新します。※現状はWebアプリに当機能は実装していない。
-POST /api/tasks/delete/{id}: 指定したIDのタスクを削除します。
-GET /api/tasks/{id}/comments: 指定したタスクのコメントを取得します。
-POST /api/tasks/{id}/comments/add: タスクに新しいコメントを追加します。
+- GET /api/tasks: すべてのタスクを取得します。
+- POST /api/tasks/create: 新しいタスクを作成します。
+- POST /api/tasks/update/{id}: 指定したIDのタスクを更新します。※現状はWebアプリに当機能は実装していない。
+- POST /api/tasks/delete/{id}: 指定したIDのタスクを削除します。
+- GET /api/tasks/{id}/comments: 指定したタスクのコメントを取得します。
+- POST /api/tasks/{id}/comments/add: タスクに新しいコメントを追加します。
 
 ## 使用技術
-フロントエンド:
+- React: ユーザーインターフェースを構築するためのJavaScriptライブラリ。
+- Axios: APIリクエストを行うためのPromiseベースのHTTPクライアント。
+- CSS: アプリケーションのスタイリングに使用。
 
-React: ユーザーインターフェースを構築するためのJavaScriptライブラリ。
-Axios: APIリクエストを行うためのPromiseベースのHTTPクライアント。
-CSS: アプリケーションのスタイリングに使用。
-
-Spring Boot: RESTful APIを構築するためのバックエンドフレームワーク。
-MyBatis: データベースアクセスを管理するための永続化フレームワーク。
-PostgreSQL: タスクやコメントを保存するためのデータベース。
+- Spring Boot: RESTful APIを構築するためのバックエンドフレームワーク。
+- MyBatis: データベースアクセスを管理するための永続化フレームワーク。
+- PostgreSQL: タスクやコメントを保存するためのデータベース。
