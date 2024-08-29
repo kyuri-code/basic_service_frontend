@@ -27,105 +27,105 @@ WSL2のセットアップはOS自体の設定を変更してしまうので、�
 
 1. **nodejsとnpmのインストール**
 ```bash
-    # nodejsのインストール
-    sudo apt-get update
-    sudo apt-get isntall nodejs npm
+# nodejsのインストール
+sudo apt-get update
+sudo apt-get isntall nodejs npm
 
-    # インストールされたか確認
-    node -v
-    npm -v
+# インストールされたか確認
+node -v
+npm -v
 ```
 
 2. **リポジトリのクローン**
 ```bash
-    git clone https://github.com/kyuri-code/basic_service_frontend.git
-    cd basic_service_frontend
+git clone https://github.com/kyuri-code/basic_service_frontend.git
+cd basic_service_frontend
 ```
 
 3. **依存関係のインストール**: Node.jsがインストールされていることを確認してください。その後、以下のコマンドを実行します。
 ```bash
-    # アプリで使用しているライブラリをインストールするコマンド
-    npm install
+# アプリで使用しているライブラリをインストールするコマンド
+npm install
 ```
 
 4. **Webサーバの起動**
 - WebアプリのBuild
 ```bash
-    # reactのアプリをbuildする
-    # buildすることによって、カレントディレクトリに/buildディレクトリが作成される
-    # buildディレクトリ配下にコンパイルされたフロントエンドのコードが作成されている
-    npm run build
+# reactのアプリをbuildする
+# buildすることによって、カレントディレクトリに/buildディレクトリが作成される
+# buildディレクトリ配下にコンパイルされたフロントエンドのコードが作成されている
+npm run build
 ```
 
 - WebServerのソフトのインストール
 Ngxinをインストールする
 ```bash
-    # nginxのインストール
-    # installしたタイミングでnginxのWebServerは起動することになる
-    apt-get update
-    apt-get install nginx
+# nginxのインストール
+# installしたタイミングでnginxのWebServerは起動することになる
+apt-get update
+apt-get install nginx
 
-    # nginxの起動確認
-    # 「running」が確認できればNginxは起動している
-    sudo systemctl status nginx.service
-    # 以下が表示される
-    Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
-        Active: active (running) since Tue 2024-08-27 15:40:56 JST; 50s ago
+# nginxの起動確認
+# 「running」が確認できればNginxは起動している
+sudo systemctl status nginx.service
+# 以下が表示される
+Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+    Active: active (running) since Tue 2024-08-27 15:40:56 JST; 50s ago
 ```
 
 - 作成したアプリをNginxにのっける
 ```bash
-    # reactで作成したアプリをnginxに配備
-    # Frontendのアプリのルートディレクトリに移動
-    # "npm run build"で生成したbuildファイルをnginxの管理ディレクトリにコピーする
-    sudo cp -r ./build/* /var/www/html
+# reactで作成したアプリをnginxに配備
+# Frontendのアプリのルートディレクトリに移動
+# "npm run build"で生成したbuildファイルをnginxの管理ディレクトリにコピーする
+sudo cp -r ./build/* /var/www/html
 ```
 
 - リバースプロキシの設定
 このままではまだ、APIサーバに対してアクセスすることができないず、タスクの登録ができない。
 Nginxの設定で適切なリバースプロキシの設定を行う。
 ```bash
-    # /etc/nginx/nginx.confのhttp内に下記を追加
-    # ファイル全体の記載に若干の差異があるかもしれなが、serverセクション下にlocation /api/を追加するだけで問題ない。
+# /etc/nginx/nginx.confのhttp内に下記を追加
+# ファイル全体の記載に若干の差異があるかもしれなが、serverセクション下にlocation /api/を追加するだけで問題ない。
 
-    # nginx.confに対して編集を行う
-    sudo vim /etc/nginx/nginx.conf
-    # ----vimの編集画面 ここから----
-    http {
-    ...中略
+# nginx.confに対して編集を行う
+sudo vim /etc/nginx/nginx.conf
+# ----vimの編集画面 ここから----
+http {
+...中略
 
-        # 以下の設定を追加 ここから
-        server {
-            listen 80;
-            listen [::]:80;
+    # 以下の設定を追加 ここから
+    server {
+        listen 80;
+        listen [::]:80;
 
-            root /var/www/html;  # Reactアプリケーションが配置されているディレクトリ
+        root /var/www/html;  # Reactアプリケーションが配置されているディレクトリ
 
-            index index.html index.htm;
+        index index.html index.htm;
 
-            server_name _;
+        server_name _;
 
-            # http://localhost/でリクエストが飛んできたときは、index.htmlを返却するようにする
-            location / {
-                try_files $uri $uri/ /index.html;  # SPAのため、直接のURIが存在しない場合でもindex.htmlを返す
-            }
-
-            # http://localhost/api/以下にリクエストが飛んできたときはhttp://localhost:8080に対してリクエストを送るようになる
-            # 例えばhttp://localhost/api/tasks/createというリクエストが飛んだ場合は、
-            # http://localhost:8080/api/tasks/createにリクエストが飛ぶ
-            # つまり、APIサーバに対してリクエストを飛ばすようになる。
-            location /api/ {
-                proxy_pass http://localhost:8080;  # リクエストをバックエンドのSpring Bootにプロキシ
-                proxy_set_header Host $host;
-                proxy_set_header X-Real-IP $remote_addr;
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header X-Forwarded-Proto $scheme;
-            }		
+        # http://localhost/でリクエストが飛んできたときは、index.htmlを返却するようにする
+        location / {
+            try_files $uri $uri/ /index.html;  # SPAのため、直接のURIが存在しない場合でもindex.htmlを返す
         }
-        # 以下の設定を追加 ここまで
-    
-    ...中略
-    # ----vimの編集画面 ここまで----
+
+        # http://localhost/api/以下にリクエストが飛んできたときはhttp://localhost:8080に対してリクエストを送るようになる
+        # 例えばhttp://localhost/api/tasks/createというリクエストが飛んだ場合は、
+        # http://localhost:8080/api/tasks/createにリクエストが飛ぶ
+        # つまり、APIサーバに対してリクエストを飛ばすようになる。
+        location /api/ {
+            proxy_pass http://localhost:8080;  # リクエストをバックエンドのSpring Bootにプロキシ
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }		
+    }
+    # 以下の設定を追加 ここまで
+
+...中略
+# ----vimの編集画面 ここまで----
 ```
 
 ## APIエンドポイント
